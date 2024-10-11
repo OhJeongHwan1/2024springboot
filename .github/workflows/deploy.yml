@@ -9,10 +9,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: ssh 로 ec2 접속하기
-        uses: appleboy/ssh-action@1.0.3
+      - name: ssh로 ec2접속하기
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          sciprt: echo "접속완료"
+          script: echo "접속완료"
