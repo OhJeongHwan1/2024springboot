@@ -1,4 +1,33 @@
 package com.sample.spring.repository;
 
-public class ReviewRepositoryImpl {
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sample.spring.model.ReviewEntity;
+import com.sample.spring.model.QReviewEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public class ReviewRepositoryImpl implements ReviewRepositoryCustom{
+    @Autowired
+    JPAQueryFactory queryFactory;
+
+    @Override
+    public Slice<ReviewEntity> findSliceByFoodId(Long foodId, Pageable page) {
+        List<ReviewEntity> reviews = queryFactory.select(QReviewEntity.reviewEntity)
+                .from(QReviewEntity.reviewEntity)
+                .where(QReviewEntity.reviewEntity.foodId.eq(foodId))
+                .offset((long) page.getPageNumber() * page.getPageSize()) // 0 page * 10 pageSize
+                .limit(page.getPageSize()+1)
+                .fetch();
+        return new SliceImpl<>(
+                reviews.stream().limit(page.getPageSize()).toList(),
+                page,
+                reviews.size() > page.getPageSize()
+        );
+    }
 }
