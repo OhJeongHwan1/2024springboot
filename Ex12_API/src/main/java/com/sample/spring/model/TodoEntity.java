@@ -1,5 +1,6 @@
 package com.sample.spring.model;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
